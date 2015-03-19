@@ -1,0 +1,5 @@
+dist
+*.o
+*.pdf
+*.swp
+*.swo
