@@ -1,0 +1,28 @@
+\documentclass[10pt]{article}
+\usepackage{hyperref}
+
+\title{Plan for Automatic Program Analysis project 2}
+\author{Frank Dedden \and Wilco Kusee}
+
+
+\begin{document}
+\maketitle
+
+\section*{Description}
+We will be analysing a subset of the Haskell language. The parser we will be using comes from a project that Wilco made in his spare time (\url{http://github.com/detrumi/hc}). The language will simplify from Haskell a bit. For example no indentation will be used, braces and semicolons will be required instead.
+Our subset of the Haskell language will support (in addition to the Lambda calculus):
+\begin{itemize}
+    \item General data structures
+    \item Recursion
+    \item Case statements
+    \item Let bindings
+\end{itemize}
+We will at least add one of the following optional features:
+\begin{itemize}
+    \item Polymorphism
+    \item Subtyping (Class system)
+    \item Syntactic sugar for lists and tuples
+\end{itemize}
+We will conduct the Control Flow Analysis (with general data structures) to our language.
+
+\end{document}
