@@ -16,7 +16,7 @@ brackets = between (sStr "[") (sStr "]")
 braces   = between (sStr "{") (sStr "}")
 
 pStatements :: TokenParser [Statement]
-pStatements = (pOperatorDecl <|> pData <|> SBind <$> pDef) `sepBy1` sStr ";" <* eof
+pStatements = (pOperatorDecl <|> pData <|> SBind <$> pDef) `sepEndBy1` sStr ";" <* eof
 
 pDef :: TokenParser Bind
 pDef = Bind <$> (pLowerId <|> parens name) <*> many (pVar <|> try pConstrSimple <|> pConst) <* sStr "=" <*> pExpr

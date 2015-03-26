@@ -9,7 +9,10 @@ import Text.Parsec.Error (ParseError)
 import System.Environment (getArgs)
 
 main :: IO ()
-main = getArgs >>= run . head
+main = do
+	filename : _ <- getArgs
+	input <- readFile filename
+	run input
 
 run :: String -> IO ()
 run input = putStrLn $ show $ doParse input
