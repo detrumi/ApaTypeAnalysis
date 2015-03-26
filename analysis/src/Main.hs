@@ -1,7 +1,6 @@
 module Main where
 
 import Expr
-import Lexer
 import Parser
 
 import Text.Parsec.Prim (runP)
@@ -17,10 +16,5 @@ main = do
 run :: String -> IO ()
 run input = putStrLn $ show $ doParse input
 
-doLex :: String -> Either ParseError [Token]
-doLex s = runP lexicalScanner () "Main" s
-
 doParse :: String -> Either ParseError [Statement]
-doParse s = do
-    s' <- doLex s
-    runP pStatements () "Main" s'
+doParse s = runP pStatements () "Main" s

@@ -1,87 +1,49 @@
 module Lexer where
 
-import Expr
+import Text.Parsec.Prim
+import Control.Applicative hiding ((<|>), many)
+import Text.Parsec.String (Parser)
+import Text.Parsec.Char (letter, char)
+import qualified Text.Parsec.Token as P
+import Text.Parsec.Language (haskellDef)
 
-import Text.ParserCombinators.Parsec
-import Control.Applicative hiding (Const, many, (<|>))
-import Data.Char (isAlphaNum, isLower, isUpper)
-import Control.Monad (liftM)
+langDef :: P.LanguageDef u
+langDef = haskellDef
+    { P.identStart = letter <|> char '_'
+    }
 
+lexer :: P.TokenParser a
+lexer = P.makeTokenParser langDef
 
-data Token = ConstTok { fromConst    :: Value }
-           | LowerId  { fromLowerId  :: String }
-           | UpperId  { fromUpperId  :: String }
-           | Terminal { fromTerminal :: String }
-           deriving (Eq)
+opLetter :: String
+opLetter = ":!#$%&*+./<=>?@\\^|-~"
 
-instance Show Token where
-    show (ConstTok v) = show v
-    show (LowerId i) = i
-    show (UpperId i) = i
-    show (Terminal t) = t
+parens, brackets, braces :: Parser a -> Parser a
+parens   = P.parens lexer
+brackets = P.brackets lexer
+braces   = P.braces lexer
 
-keywords :: [String]
-keywords =
-    [ "let", "in"
-    , "if", "then", "else"
-    , "data"
-    , "case", "of"
-    , "infixl"]
+commaSep, commaSep1, semiSep1 :: Parser a -> Parser [a]
+commaSep = P.commaSep lexer
+commaSep1 = P.commaSep1 lexer
+semiSep1 = P.semiSep1 lexer
 
-terminals :: [String]
-terminals =
-    [ "()"
-    , "->", ";"
-    , "(", ")", "{", "}", "[", ",", "]"]
+reserved, reservedOp :: String -> Parser ()
+reserved = P.reserved lexer
+reservedOp = P.reservedOp lexer
 
-symbols :: [Char]
-symbols = "!#$%&*+./<=>?@\\^|-~:"
+int :: Parser Int
+int = fromInteger <$> P.natural lexer
 
-lexSymbol :: Parser Token
-lexSymbol = try $ Terminal <$> many1 (satisfy (`elem` symbols))
+identifier, operator, semi :: Parser String
+identifier = P.identifier lexer
+operator = P.operator lexer
+semi = P.semi lexer
 
-lexKeyword :: Parser Token
-lexKeyword = do terminal <- choice $ map (try . (Terminal <$>) . string) keywords
-                notFollowedBy alphaNum'
-                return terminal
+symbol :: String -> Parser String
+symbol = P.symbol lexer
 
-lexTerminal :: Parser Token
-lexTerminal = choice $ map (try . (Terminal <$>) . string) terminals
-
-lexSpaces :: Parser ()
-lexSpaces = skipMany (space <|> const ' ' <$> try lexComment)
-
-lexComment :: Parser String
-lexComment = string "--" *> manyTill anyChar (newline <|> const ' ' <$> eof)
-    <|> string "{-" *> manyTill anyChar (string "-}")
-
-lexInt :: Parser Token
-lexInt = ConstTok . IntVal . read <$> many1 digit 
-
-lexLowerId :: Parser Token
-lexLowerId = liftM LowerId . (:) <$> satisfy (withSpecials isLower) <*> many alphaNum'
-
-lexUpperId :: Parser Token
-lexUpperId = liftM UpperId . (:) <$> satisfy isUpper <*> many alphaNum'
-
-lexicalScanner :: Parser [Token]
-lexicalScanner = lexSpaces *> many (lexToken <* lexSpaces) <* eof
-
-lexToken :: Parser Token
-lexToken = choice $ map try
-            [ lexInt
-            , lexKeyword
-            , lexTerminal
-            , lexSymbol
-            , lexLowerId
-            , lexUpperId
-            ]
-
-withSpecials :: (Char -> Bool) -> Char -> Bool
-withSpecials f c | f c       = True
-                 | c == '_'  = True
-                 | c == '\'' = True
-                 | otherwise = False
-
-alphaNum' :: Parser Char
-alphaNum' = satisfy (withSpecials isAlphaNum)
+identWith :: (String -> Bool) -> String -> Parser String
+identWith p message = try $ do
+    ident <- identifier
+    if p ident then return ident else fail message
