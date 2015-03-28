@@ -19,18 +19,29 @@
 \newcommand{\GUL}{\GammaH \vdash_{UL}}
 
 \newcommand{\letin}[2]{\textbf{\textrm{~let~}} #1 \textbf{\textrm{~in~}} #2}
+\newcommand{\lam}[2]{\textbf{\textrm{~\textbackslash}}#1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
 
 \begin{document}
 
+% TODO: checken van alles, want volgens mij klopt het nog niet allemaal
 \trule
-	{\GammaH (x) = \sigma}
-	{\GUL x : \sigma}
+	{}
+	{\GUL c : \tau}
+	{t-const}
+
+\trule
+	{\GammaH (x) = \tau}
+	{\GUL x : \tau}
 	{t-var}
 
 \trule
-	{\GUL t_1 : \sigma_1 \\ \GammaH[x \mapsto \sigma_1] \vdash t_2 : \tau}
-	{\GUL \letin{x = t_1}{t_2} : \tau}
+	{\GUL e_1 : \tau_1 \\ \GammaH[x \mapsto \tau_1] \vdash e_2 : \tau}
+	{\GUL \letin{x = e_1}{e_2} : \tau}
 	{t-let}
 
+\trule
+	{\GUL x : \tau_1 \\ \GammaH[e \mapsto \tau_1] \vdash e : \tau}
+	{\GUL \lam{x}{t} : \tau}
+	{t-lam}
 
 \end{document}
