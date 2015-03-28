@@ -2,6 +2,8 @@
 \usepackage{hyperref}
 \usepackage{mathpartir}
 
+\newcommand{\GammaH}{\widehat{\Gamma}}
+
 % houtje touwtje manier om typwerk te besparen
 \newcommand{\trule}[3]{
 	\begin{mathpar}
@@ -14,22 +16,21 @@
 }
 
 % provides Gamma |- UL
-\newcommand{\GUL}{\Gamma \vdash_{UL}}
+\newcommand{\GUL}{\GammaH \vdash_{UL}}
 
 \newcommand{\letin}[2]{\textbf{\textrm{~let~}} #1 \textbf{\textrm{~in~}} #2}
 
 \begin{document}
 
 \trule
-	{\Gamma (x) = \sigma}
+	{\GammaH (x) = \sigma}
 	{\GUL x : \sigma}
 	{t-var}
 
 \trule
-	{\GUL t_1 : \sigma_1 \\ \Gamma[x \sigma_1] \vdash t_2 : \tau}
+	{\GUL t_1 : \sigma_1 \\ \GammaH[x \mapsto \sigma_1] \vdash t_2 : \tau}
 	{\GUL \letin{x = t_1}{t_2} : \tau}
 	{t-let}
-
 
 
 \end{document}
