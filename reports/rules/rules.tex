@@ -2,6 +2,8 @@
 \usepackage{hyperref}
 \usepackage{mathpartir}
 
+\newcommand{\keyw}[1]{\textrm{\textbf{#1}}}
+
 \newcommand{\GammaH}{\widehat{\Gamma}}
 
 % houtje touwtje manier om typwerk te besparen
@@ -11,37 +13,76 @@
 			{#1}
 			{#2}
 			\hspace{1cm}
-			{\textbf{\textrm{[#3]}}}
+			{\keyw{[#3]}}
 	\end{mathpar}
 }
 
 % provides Gamma |- UL
 \newcommand{\GUL}{\GammaH \vdash_{UL}}
 
-\newcommand{\letin}[2]{\textbf{\textrm{~let~}} #1 \textbf{\textrm{~in~}} #2}
-\newcommand{\lam}[2]{\textbf{\textrm{~\textbackslash}}#1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
+\newcommand{\letin}[2]{\keyw{~let~} #1 \keyw{~in~} #2}
+\newcommand{\lam}[2]{\keyw{~\textbackslash} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
+\newcommand{\ife}[3]{\keyw{~if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
+\newcommand{\case}[3]{\keyw{~case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\};~}}
+\newcommand{\app}[2]{#1 ~ #2}
+\newcommand{\opp}[2]{#1 \oplus #2}
 
 \begin{document}
 
 % TODO: checken van alles, want volgens mij klopt het nog niet allemaal
+% TODO: waarom die hat op Gamma, moet er ook een hat op \tau?
+% TODO: wat moeten we met UL, moet dit nog CFA worden?
+
+% Const
 \trule
 	{}
 	{\GUL c : \tau}
 	{t-const}
 
+% Var
 \trule
-	{\GammaH (x) = \tau}
-	{\GUL x : \tau}
+	{\GammaH (x) : \tau}
+	{\GUL x = v : \tau}
 	{t-var}
 
+% Let
 \trule
 	{\GUL e_1 : \tau_1 \\ \GammaH[x \mapsto \tau_1] \vdash e_2 : \tau}
 	{\GUL \letin{x = e_1}{e_2} : \tau}
 	{t-let}
 
+% TODO: deze is nog fout, snap die [...] nog niet helemaal
+% Lam
 \trule
 	{\GUL x : \tau_1 \\ \GammaH[e \mapsto \tau_1] \vdash e : \tau}
 	{\GUL \lam{x}{t} : \tau}
 	{t-lam}
+
+% App
+\trule
+	{\GUL f : \tau_1 \rightarrow \tau_2 \\ \GUL e : \tau_1}
+	{\GUL \app{f}{e} : \tau_2}
+	{t-app}
+
+% If
+\trule
+	{\GUL e_1 : Bool \\ \GUL e_2 : \tau \\ \GUL e_3 : \tau}
+	{\GUL \ife{e_1}{e_2}{e_3} : \tau}
+	{t-ife}
+
+% Case
+\trule
+	{\GUL e_1 : \tau_1 \\ \GUL e_2 : \tau_1 \\ \GUL e_3 : \tau_2}
+	{\GUL \case{e_1}{e_2}{e_3} : \tau_2}
+	{t-case}
+
+% TODO
+% Con
+
+% Infix
+\trule
+	{\GUL e_1 : \tau \\ \GUL e_2 : \tau}
+	{\GUL \opp{e_1}{e_2} : \tau}
+	{t-infix}
 
 \end{document}
