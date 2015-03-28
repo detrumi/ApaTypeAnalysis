@@ -2,13 +2,34 @@
 \usepackage{hyperref}
 \usepackage{mathpartir}
 
+% houtje touwtje manier om typwerk te besparen
+\newcommand{\trule}[3]{
+	\begin{mathpar}
+		\inferrule
+			{#1}
+			{#2}
+			\hspace{1cm}
+			{\textbf{\textrm{[#3]}}}
+	\end{mathpar}
+}
+
+% provides Gamma |- UL
+\newcommand{\GUL}{\Gamma \vdash_{UL}}
+
+\newcommand{\letin}[2]{\textbf{\textrm{~let~}} #1 \textbf{\textrm{~in~}} #2}
+
 \begin{document}
 
-Test inference rule:
-\begin{mathpar}
-\inferrule
-	{hoi}
-	{test}
-\end{mathpar}
+\trule
+	{\Gamma (x) = \sigma}
+	{\GUL x : \sigma}
+	{t-var}
+
+\trule
+	{\GUL t_1 : \sigma_1 \\ \Gamma[x \sigma_1] \vdash t_2 : \tau}
+	{\GUL \letin{x = t_1}{t_2} : \tau}
+	{t-let}
+
+
 
 \end{document}
