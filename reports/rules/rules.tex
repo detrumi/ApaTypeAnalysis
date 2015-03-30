@@ -25,7 +25,7 @@
 \newcommand{\ife}[3]{\keyw{~if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
 \newcommand{\case}[3]{\keyw{~case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\};~}}
 \newcommand{\app}[2]{#1 ~ #2}
-\newcommand{\opp}[2]{#1 \oplus #2}
+\newcommand{\infix}[3]{#1 ~ #2 ~ #3}
 
 \begin{document}
 
@@ -80,8 +80,8 @@
 
 % Infix
 \trule
-	{\GUL e_1 : \tau \\ \GUL e_2 : \tau}
-	{\GUL \opp{e_1}{e_2} : \tau}
+	{\GUL e_1 : \tau_1 \\ \GUL f : \tau_1 \rightarrow \tau_2 \\ \GUL e_2 : \tau_2}
+	{\GUL \infix{e_1}{f}{e_2} : \tau_2}
 	{t-infix}
 
 \end{document}
