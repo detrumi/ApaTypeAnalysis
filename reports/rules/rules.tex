@@ -1,10 +1,12 @@
 \documentclass[10pt]{article}
 \usepackage{hyperref}
 \usepackage{mathpartir}
+\usepackage{amsmath}
 
 \newcommand{\keyw}[1]{\textrm{\textbf{#1}}}
 
 \newcommand{\GammaH}{\widehat{\Gamma}}
+\newcommand{\tauH}{\widehat{\tau}}
 
 % houtje touwtje manier om typwerk te besparen
 \newcommand{\trule}[3]{
@@ -30,49 +32,68 @@
 \begin{document}
 
 % TODO: checken van alles, want volgens mij klopt het nog niet allemaal
-% TODO: waarom die hat op Gamma, moet er ook een hat op \tau?
+% TODO: waarom die hat op Gamma, moet er ook een hat op \tauH?
 % TODO: wat moeten we met UL, moet dit nog CFA worden?
+
+Below follows the annotated type system and it's judgements.
+
+% TODO: dit moet nog gemaakt worden, is maar half af / kloppend
+\begin{table}[htp]
+\centering
+\begin{tabular}{llll}
+$\phi$    & $\in$   & \textbf{Ann}      & annotations\\
+$\tauH$   & $\in$   & $\widehat{\textrm{\textbf{Type}}}$    & annotated types\\
+$\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TEnv}}}$    & annotated type enviroments\\
+\end{tabular}
+\end{table}
+
+\begin{align*}
+\tauH   &::= \alpha ~|~ Int ~|~ Double ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
+\phi    &::= \tauH ~|~ \forall \alpha. \tauH_1\\
+\GammaH &::= [] ~|~ \\
+\end{align*}
+
 
 % Const
 \trule
 	{}
-	{\GUL c : \tau}
+	{\GUL c : \tauH}
 	{t-const}
 
 % Var
 \trule
-	{\GammaH (x) : \tau}
-	{\GUL x = v : \tau}
+	{\GammaH (x) : \tauH}
+	{\GUL x = v : \tauH}
 	{t-var}
 
 % Let
 \trule
-	{\GUL e_1 : \tau_1 \\ \GammaH[x \mapsto \tau_1] \vdash e_2 : \tau}
-	{\GUL \letin{x = e_1}{e_2} : \tau}
+	{\GUL e_1 : \tauH_1 \\ \GammaH[x \mapsto \tauH_1] \vdash e_2 : \tauH}
+	{\GUL \letin{x = e_1}{e_2} : \tauH}
 	{t-let}
 
 % Lam
 \trule
-	{\GUL x : \tau_1 \\ \GUL e : \tau_2}
-	{\GUL \lam{x}{e} : \tau_1 \rightarrow \tau_2}
+	{\GUL x : \tauH_1 \\ \GUL e : \tauH_2}
+	{\GUL \lam{x}{e} : \tauH_1 \rightarrow \tauH_2}
 	{t-lam}
 
 % App
 \trule
-	{\GUL f : \tau_1 \rightarrow \tau_2 \\ \GUL e : \tau_1}
-	{\GUL \app{f}{e} : \tau_2}
+	{\GUL f : \tauH_1 \rightarrow \tauH_2 \\ \GUL e : \tauH_1}
+	{\GUL \app{f}{e} : \tauH_2}
 	{t-app}
 
 % If
 \trule
-	{\GUL e_1 : Bool \\ \GUL e_2 : \tau \\ \GUL e_3 : \tau}
-	{\GUL \ife{e_1}{e_2}{e_3} : \tau}
+	{\GUL e_1 : Bool \\ \GUL e_2 : \tauH \\ \GUL e_3 : \tauH}
+	{\GUL \ife{e_1}{e_2}{e_3} : \tauH}
 	{t-ife}
 
 % Case
 \trule
-	{\GUL e_1 : \tau_1 \\ \GUL e_2 : \tau_1 \\ \GUL e_3 : \tau_2}
-	{\GUL \case{e_1}{e_2}{e_3} : \tau_2}
+	{\GUL e_1 : \tauH_1 \\ \GUL e_2 : \tauH_1 \\ \GUL e_3 : \tauH_2}
+	{\GUL \case{e_1}{e_2}{e_3} : \tauH_2}
 	{t-case}
 
 % TODO
@@ -80,8 +101,8 @@
 
 % Infix
 \trule
-	{\GUL e_1 : \tau_1 \\ \GUL f : \tau_1 \rightarrow \tau_2 \\ \GUL e_2 : \tau_2}
-	{\GUL \infix{e_1}{f}{e_2} : \tau_2}
+	{\GUL e_1 : \tauH_1 \\ \GUL f : \tauH_1 \rightarrow \tauH_2 \\ \GUL e_2 : \tauH_2}
+	{\GUL \infix{e_1}{f}{e_2} : \tauH_2}
 	{t-infix}
 
 \end{document}
