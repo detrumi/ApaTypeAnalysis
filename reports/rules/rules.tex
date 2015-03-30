@@ -21,7 +21,7 @@
 \newcommand{\GUL}{\GammaH \vdash_{UL}}
 
 \newcommand{\letin}[2]{\keyw{~let~} #1 \keyw{~in~} #2}
-\newcommand{\lam}[2]{\keyw{~\textbackslash} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
+\newcommand{\lam}[2]{\keyw{~$\lambda$} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
 \newcommand{\ife}[3]{\keyw{~if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
 \newcommand{\case}[3]{\keyw{~case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\};~}}
 \newcommand{\app}[2]{#1 ~ #2}
@@ -54,8 +54,8 @@
 % TODO: deze is nog fout, snap die [...] nog niet helemaal
 % Lam
 \trule
-	{\GUL x : \tau_1 \\ \GammaH[e \mapsto \tau_1] \vdash e : \tau}
-	{\GUL \lam{x}{t} : \tau}
+	{\GUL x : \tau_1 \\ \GUL e : \tau_2}
+	{\GUL \lam{x}{e} : \tau_1 \rightarrow \tau_2}
 	{t-lam}
 
 % App
