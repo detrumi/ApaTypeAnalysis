@@ -27,6 +27,7 @@
 \newcommand{\ife}[3]{\keyw{~if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
 \newcommand{\case}[3]{\keyw{~case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\};~}}
 \newcommand{\app}[2]{#1 ~ #2}
+\newcommand{\con}[2]{#1 ~ #2}
 \newcommand{\infix}[3]{#1 ~ #2 ~ #3}
 
 \begin{document}
@@ -96,8 +97,12 @@ $\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TEnv}}}$    & annotated type env
 	{\GUL \case{e_1}{e_2}{e_3} : \tauH_2}
 	{t-case}
 
-% TODO
+% TODO klopt volgens mij nog niet
 % Con
+\trule
+	{\GUL e : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
+	{\GUL \con{c}{e} : \tauH_2}
+	{t-con}
 
 % Infix
 \trule
