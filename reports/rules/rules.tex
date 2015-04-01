@@ -7,6 +7,7 @@
 
 \newcommand{\GammaH}{\widehat{\Gamma}}
 \newcommand{\tauH}{\widehat{\tau}}
+\newcommand{\sigmaH}{\widehat{\sigma}}
 
 % houtje touwtje manier om typwerk te besparen
 \newcommand{\trule}[3]{
@@ -19,8 +20,8 @@
 	\end{mathpar}
 }
 
-% provides Gamma |- UL
-\newcommand{\GUL}{\GammaH \vdash_{UL}}
+% provides Gamma |- CFA
+\newcommand{\GCFA}{\GammaH \vdash_{CFA}}
 
 \newcommand{\letin}[2]{\keyw{~let~} #1 \keyw{~in~} #2}
 \newcommand{\lam}[2]{\keyw{~$\lambda$} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
@@ -36,78 +37,79 @@
 % TODO: waarom die hat op Gamma, moet er ook een hat op \tauH?
 % TODO: wat moeten we met UL, moet dit nog CFA worden?
 
-Below follows the annotated type system and it's judgements.
+Below follows the annotated type system and its judgements.
 
 % TODO: dit moet nog gemaakt worden, is maar half af / kloppend
 \begin{table}[htp]
 \centering
 \begin{tabular}{llll}
-$\phi$    & $\in$   & \textbf{Ann}      & annotations\\
-$\tauH$   & $\in$   & $\widehat{\textrm{\textbf{Type}}}$    & annotated types\\
-$\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TEnv}}}$    & annotated type enviroments\\
+$\varphi$ & $\in$   & \textbf{Ann}                           & annotations\\
+$\tauH$   & $\in$   & $\widehat{\textrm{\textbf{Type}}}$     & annotated types\\
+$\sigmaH$ & $\in$   & $\widehat{\textrm{\textbf{TyScheme}}}$ & annotated type schemes\\
+$\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TyEnv}}}$    & annotated type enviroments\\
 \end{tabular}
 \end{table}
 
 \begin{align*}
 \tauH   &::= \alpha ~|~ Int ~|~ Double ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
-\phi    &::= \tauH ~|~ \forall \alpha. \tauH_1\\
-\GammaH &::= [] ~|~ \\
+\varphi &::= \tauH ~|~ \forall \alpha. \tauH_1\\
+\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
 \end{align*}
 
 
 % Const
 \trule
-	{}
-	{\GUL c : \tauH}
-	{t-const}
+	{ }
+	{\GCFA c : \tauH}
+	{cfa-const}
 
 % Var
 \trule
 	{\GammaH (x) : \tauH}
-	{\GUL x = v : \tauH}
-	{t-var}
+	{\GCFA x = v : \tauH}
+	{cfa-var}
 
 % Let
 \trule
-	{\GUL e_1 : \tauH_1 \\ \GammaH[x \mapsto \tauH_1] \vdash e_2 : \tauH}
-	{\GUL \letin{x = e_1}{e_2} : \tauH}
-	{t-let}
+	{\GCFA e_1 : \tauH_1 \\ \GammaH[x \mapsto \tauH_1] \vdash e_2 : \tauH}
+	{\GCFA \letin{x = e_1}{e_2} : \tauH}
+	{cfa-let}
 
 % Lam
 \trule
-	{\GUL x : \tauH_1 \\ \GUL e : \tauH_2}
-	{\GUL \lam{x}{e} : \tauH_1 \rightarrow \tauH_2}
-	{t-lam}
+	{\GCFA x : \tauH_1 \\ \GCFA e : \tauH_2}
+	{\GCFA \lam{x}{e} : \tauH_1 \rightarrow \tauH_2}
+	{cfa-lam}
 
 % App
 \trule
-	{\GUL f : \tauH_1 \rightarrow \tauH_2 \\ \GUL e : \tauH_1}
-	{\GUL \app{f}{e} : \tauH_2}
-	{t-app}
+	{\GCFA f : \tauH_1 \rightarrow \tauH_2 \\ \GCFA e : \tauH_1}
+	{\GCFA \app{f}{e} : \tauH_2}
+	{cfa-app}
 
 % If
 \trule
-	{\GUL e_1 : Bool \\ \GUL e_2 : \tauH \\ \GUL e_3 : \tauH}
-	{\GUL \ife{e_1}{e_2}{e_3} : \tauH}
-	{t-ife}
+	{\GCFA e_1 : Bool \\ \GCFA e_2 : \tauH \\ \GCFA e_3 : \tauH}
+	{\GCFA \ife{e_1}{e_2}{e_3} : \tauH}
+	{cfa-if}
 
 % Case
 \trule
-	{\GUL e_1 : \tauH_1 \\ \GUL e_2 : \tauH_1 \\ \GUL e_3 : \tauH_2}
-	{\GUL \case{e_1}{e_2}{e_3} : \tauH_2}
-	{t-case}
+	{\GCFA e_1 : \tauH_1 \\ \GCFA e_2 : \tauH_1 \\ \GCFA e_3 : \tauH_2}
+	{\GCFA \case{e_1}{e_2}{e_3} : \tauH_2}
+	{cfa-case}
 
 % TODO klopt volgens mij nog niet
 % Con
 \trule
-	{\GUL e : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
-	{\GUL \con{c}{e} : \tauH_2}
-	{t-con}
+	{\GCFA e : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
+	{\GCFA \con{c}{e} : \tauH_2}
+	{cfa-con}
 
 % Infix
 \trule
-	{\GUL e_1 : \tauH_1 \\ \GUL f : \tauH_1 \rightarrow \tauH_2 \\ \GUL e_2 : \tauH_2}
-	{\GUL \infix{e_1}{f}{e_2} : \tauH_2}
-	{t-infix}
+	{\GCFA e_1 : \tauH_1 \\ \GCFA f : \tauH_1 \rightarrow \tauH_2 \\ \GCFA e_2 : \tauH_2}
+	{\GCFA \infix{e_1}{f}{e_2} : \tauH_2}
+	{cfa-infix}
 
 \end{document}
