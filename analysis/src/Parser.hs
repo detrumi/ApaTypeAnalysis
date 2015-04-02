@@ -13,8 +13,10 @@ pStatements :: Parser [Statement]
 pStatements = sepEndBy1 (pOperatorDecl <|> pData <|> SBind <$> pDef) semi <* eof
 
 pDef :: Parser Bind
-pDef = Bind <$> (pLowerId <|> parens name) <*> many (pVar <|> try pConstrSimple <|> pConst) <* reservedOp "=" <*> pExpr
+pDef = foldArgs <$> (pLowerId <|> parens name) <*> many pLowerId <* reservedOp "=" <*> pExpr
     where name = pLowerId <|> operator <|> parens name
+          foldArgs v [] body = Bind v body
+          foldArgs v args body = Bind v $ Lam args body
 
 pData :: Parser Statement
 pData = SData <$ reserved "data" <*> pUpperId <*> many pLowerId

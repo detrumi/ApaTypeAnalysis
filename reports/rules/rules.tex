@@ -43,7 +43,6 @@
 	\centering
 	\begin{tabular}{llll}
 		$n$     & $\in$     & \textbf{Int} = $\mathbb{Z}$         & integers\\
-		$r$     & $\in$     & \textbf{Float} = $\mathbb{R}$       & real numers\\
 		$b$     & $\in$     & \textbf{Bool} = \{true, false\}   & booleans\\
 		$f,x$   & $\in$     & \textbf{Var}                      & variables\\
 		$\oplus$ & $\in$     & \textbf{Op}                       & binary operators\\
@@ -54,7 +53,7 @@
 \end{table}
 
 \begin{align*}
-	t   & ::= n ~|~ r ~|~ b ~|~ x\\
+	t   & ::= n ~|~ b ~|~ x\\
 		& ~|~ \letin{x = t_1}{t_2}\\
 		& ~|~ \lam{x}{t_1}\\
 		& ~|~ \app{f}{t_1}\\
@@ -78,11 +77,30 @@ Below follows the annotated type system and its judgements.
 \end{table}
 
 \begin{align*}
+	\varphi &::= \emptyset ~|~ \{\pi\} ~|~ \varphi_1 \cup \varphi_2 \\	
 	\tauH   &::= \alpha ~|~ Int ~|~ Float ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
-	\varphi &::= \tauH ~|~ \forall \alpha. \tauH_1\\
+	\sigmaH &::= \tauH ~|~ \forall \alpha. \sigmaH_1\\
 	\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
 \end{align*}
 
+
+% Int
+\trule
+	{ }
+	{\GCFA n : Int}
+	{cfa-int}
+		
+% False
+\trule
+	{ }
+	{\GCFA False : Bool}
+	{cfa-false}
+
+% True
+\trule
+	{ }
+	{\GCFA True: Bool}
+	{cfa-true}
 
 % Const
 \trule

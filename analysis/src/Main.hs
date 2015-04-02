@@ -2,6 +2,7 @@ module Main where
 
 import Expr
 import Parser
+import Typechecker
 
 import Text.Parsec.Prim (runP)
 import Text.Parsec.Error (ParseError)

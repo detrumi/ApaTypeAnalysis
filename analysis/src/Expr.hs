@@ -12,7 +12,7 @@ data Statement
 type Operator = String
 type Precedence = Int
 
-data Bind = Bind Var [Expr] Expr
+data Bind = Bind Var Expr
     deriving (Eq, Show)
 data DataCon = DataCon TypeVar [Type]
     deriving (Eq, Show)
