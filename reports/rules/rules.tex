@@ -48,7 +48,7 @@
 		$\oplus$ & $\in$     & \textbf{Op}                       & binary operators\\
 		$\pi$   & $\in$     & \textbf{Pnt}                      & program points\\
 		$t$     & $\in$     & \textbf{Tm}                       & terms\\
-		$c$     & $\in$     & \textbf{Constr}                   & data constructors\\
+		$c$     & $\in$     & \textbf{Con}                   & data constructors\\
 	\end{tabular}
 \end{table}
 
@@ -78,7 +78,7 @@ Below follows the annotated type system and its judgements.
 
 \begin{align*}
 	\varphi &::= \emptyset ~|~ \{\pi\} ~|~ \varphi_1 \cup \varphi_2 \\	
-	\tauH   &::= \alpha ~|~ Int ~|~ Float ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
+	\tauH   &::= \alpha ~|~ Int ~|~ Float ~|~ Bool ~|~ \tauH_1 \xrightarrow{\varphi} \tauH_2\\
 	\sigmaH &::= \tauH ~|~ \forall \alpha. \sigmaH_1\\
 	\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
 \end{align*}
@@ -102,12 +102,6 @@ Below follows the annotated type system and its judgements.
 	{\GCFA True: Bool}
 	{cfa-true}
 
-% Const
-\trule
-	{ }
-	{\GCFA c : \tauH}
-	{cfa-const}
-
 % Var
 \trule
 	{\GammaH (x) : \tauH}
@@ -123,12 +117,12 @@ Below follows the annotated type system and its judgements.
 % Lam
 \trule
 	{\GCFA x : \tauH_1 \\ \GCFA e : \tauH_2}
-	{\GCFA \lam{x}{e} : \tauH_1 \rightarrow \tauH_2}
+	{\GCFA \lam{x}{e} : \tauH_1 \xrightarrow{\{\pi\}} \tauH_2}
 	{cfa-lam}
 
 % App
 \trule
-	{\GCFA f : \tauH_1 \rightarrow \tauH_2 \\ \GCFA e : \tauH_1}
+	{\GCFA f : \tauH_1 \xrightarrow{\varphi} \tauH_2 \\ \GCFA e : \tauH_1}
 	{\GCFA \app{f}{e} : \tauH_2}
 	{cfa-app}
 
