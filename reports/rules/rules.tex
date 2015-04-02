@@ -49,7 +49,7 @@
 		$\oplus$ & $\in$     & \textbf{Op}                       & binary operators\\
 		$\pi$   & $\in$     & \textbf{Pnt}                      & program points\\
 		$t$     & $\in$     & \textbf{Tm}                       & terms\\
-		$C$     & $\in$     & \textbf{Constr}                   & data constructors\\
+		$c$     & $\in$     & \textbf{Constr}                   & data constructors\\
 	\end{tabular}
 \end{table}
 
@@ -60,7 +60,7 @@
 		& ~|~ \app{f}{t_1}\\
 		& ~|~ \ite{t_1}{t_2}{t_3}\\
 		& ~|~ \case{t_1}{t_2}{t_3}\\
-		& ~|~ \con{C}{t_1}\\
+		& ~|~ \con{c}{t_1}\\
 		& ~|~ \infix{t_1}{t_2}\\
 \end{align*}
 
@@ -130,7 +130,7 @@ Below follows the annotated type system and its judgements.
 % Con
 \trule
 	{\GCFA e : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
-	{\GCFA \con{C}{e} : \tauH_2}
+	{\GCFA \con{c}{e} : \tauH_2}
 	{cfa-con}
 
 % Infix
