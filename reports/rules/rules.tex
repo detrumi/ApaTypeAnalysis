@@ -4,6 +4,9 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 
+\title{Control Flow Analysis of a subset of Haskell}
+\author{Frank Dedden \and Wilco Kusee}
+
 \newcommand{\keyw}[1]{\textrm{\textbf{#1}}}
 
 \newcommand{\GammaH}{\widehat{\Gamma}}
@@ -25,7 +28,7 @@
 \newcommand{\GCFA}{\GammaH \vdash_{CFA}}
 
 \newcommand{\letin}[2]{\keyw{let~} #1 \keyw{~in~} #2}
-\newcommand{\lam}[2]{\keyw{$\lambda_\pi$} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
+\newcommand{\lam}[2]{\keyw{$\lambda_\pi$} #1 \rightarrow #2}
 \newcommand{\ite}[3]{\keyw{if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
 \newcommand{\case}[3]{\keyw{case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\}}}
 \newcommand{\app}[2]{#1 ~ #2}
@@ -35,10 +38,9 @@
 
 \begin{document}
 
-% TODO: checken van alles, want volgens mij klopt het nog niet allemaal
-% TODO: waarom die hat op Gamma, moet er ook een hat op \tauH?
-% TODO: wat moeten we met UL, moet dit nog CFA worden?
+\maketitle
 
+\section{Language definition}
 \begin{table}[htp]
 	\centering
 	\begin{tabular}{llll}
@@ -63,9 +65,8 @@
 		& ~|~ \infix{t_1}{t_2}\\
 \end{align*}
 
-Below follows the annotated type system and its judgements.
 
-% TODO: dit moet nog gemaakt worden, is maar half af / kloppend
+\section{Type system}
 \begin{table}[htp]
 	\centering
 	\begin{tabular}{llll}
@@ -138,7 +139,6 @@ Below follows the annotated type system and its judgements.
 	{\GCFA \case{e_1}{e_2}{e_3} : \tauH_2}
 	{cfa-case}
 
-% TODO klopt volgens mij nog niet
 % Con
 \trule
 	{\GCFA e : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
