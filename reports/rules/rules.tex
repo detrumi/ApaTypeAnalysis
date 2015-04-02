@@ -25,7 +25,7 @@
 \newcommand{\GCFA}{\GammaH \vdash_{CFA}}
 
 \newcommand{\letin}[2]{\keyw{let~} #1 \keyw{~in~} #2}
-\newcommand{\lam}[2]{\keyw{$\lambda$} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
+\newcommand{\lam}[2]{\keyw{$\lambda_\pi$} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
 \newcommand{\ite}[3]{\keyw{if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
 \newcommand{\case}[3]{\keyw{case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\}}}
 \newcommand{\app}[2]{#1 ~ #2}
@@ -46,7 +46,7 @@
 		$r$     & $\in$     & \textbf{Float} = $\mathbb{R}$       & real numers\\
 		$b$     & $\in$     & \textbf{Bool} = \{true, false\}   & booleans\\
 		$f,x$   & $\in$     & \textbf{Var}                      & variables\\
-		$op$    & $\in$     & \textbf{Op}                       & binary operators\\
+		$\oplus$ & $\in$     & \textbf{Op}                       & binary operators\\
 		$\pi$   & $\in$     & \textbf{Pnt}                      & program points\\
 		$t$     & $\in$     & \textbf{Tm}                       & terms\\
 		$C$     & $\in$     & \textbf{Constr}                   & data constructors\\
@@ -78,7 +78,7 @@ Below follows the annotated type system and its judgements.
 \end{table}
 
 \begin{align*}
-	\tauH   &::= \alpha ~|~ Int ~|~ Double ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
+	\tauH   &::= \alpha ~|~ Int ~|~ Float ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
 	\varphi &::= \tauH ~|~ \forall \alpha. \tauH_1\\
 	\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
 \end{align*}
