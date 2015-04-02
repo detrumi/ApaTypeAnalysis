@@ -23,13 +23,14 @@
 % provides Gamma |- CFA
 \newcommand{\GCFA}{\GammaH \vdash_{CFA}}
 
-\newcommand{\letin}[2]{\keyw{~let~} #1 \keyw{~in~} #2}
-\newcommand{\lam}[2]{\keyw{~$\lambda$} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
-\newcommand{\ife}[3]{\keyw{~if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
-\newcommand{\case}[3]{\keyw{~case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\};~}}
+\newcommand{\letin}[2]{\keyw{let~} #1 \keyw{~in~} #2}
+\newcommand{\lam}[2]{\keyw{$\lambda$} #1 \rightarrow #2} % Is dit handig met die rightarrow als scheiding voor een lambda?
+\newcommand{\ite}[3]{\keyw{if~} #1 \keyw{~then~} #2 \keyw{~else~} #3}
+\newcommand{\case}[3]{\keyw{case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\}}}
 \newcommand{\app}[2]{#1 ~ #2}
 \newcommand{\con}[2]{#1 ~ #2}
-\newcommand{\infix}[3]{#1 ~ #2 ~ #3}
+\newcommand{\infix}[2]{#1 \oplus #2}
+
 
 \begin{document}
 
@@ -37,23 +38,48 @@
 % TODO: waarom die hat op Gamma, moet er ook een hat op \tauH?
 % TODO: wat moeten we met UL, moet dit nog CFA worden?
 
+\begin{table}[htp]
+	\centering
+	\begin{tabular}{llll}
+		$n$     & $\in$     & \textbf{Int} = \mathbb{Z}         & integers\\
+		$r$     & $\in$     & \textbf{Float} = \mathbb{R}       & real numers\\
+		$b$     & $\in$     & \textbf{Bool} = \{true, false\}   & booleans\\
+		$f,x$   & $\in$     & \textbf{Var}                      & variables\\
+		$op$    & $\in$     & \textbf{Op}                       & binary operators\\
+		$\pi$   & $\in$     & \textbf{Pnt}                      & program points\\
+		$t$     & $\in$     & \textbf{Tm}                       & terms\\
+		$C$     & $\in$     & \textbf{Constr}                   & data constructors\\
+	\end{tabular}
+\end{table}
+
+\begin{align*}
+	t   & ::= n ~|~ r ~|~ b ~|~ x\\
+		& ~|~ \letin{x = t_1}{t_2}\\
+		& ~|~ \lam{x}{t_1}\\
+		& ~|~ \app{f}{t_1}\\
+		& ~|~ \ite{t_1}{t_2}{t_3}\\
+		& ~|~ \case{t_1}{t_2}{t_3}\\
+		& ~|~ \con{C}{t_1}\\
+		& ~|~ \infix{t_1}{t_2}\\
+\end{align*}
+
 Below follows the annotated type system and its judgements.
 
 % TODO: dit moet nog gemaakt worden, is maar half af / kloppend
 \begin{table}[htp]
-\centering
-\begin{tabular}{llll}
-$\varphi$ & $\in$   & \textbf{Ann}                           & annotations\\
-$\tauH$   & $\in$   & $\widehat{\textrm{\textbf{Type}}}$     & annotated types\\
-$\sigmaH$ & $\in$   & $\widehat{\textrm{\textbf{TyScheme}}}$ & annotated type schemes\\
-$\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TyEnv}}}$    & annotated type enviroments\\
-\end{tabular}
+	\centering
+	\begin{tabular}{llll}
+		$\varphi$ & $\in$   & \textbf{Ann}                           & annotations\\
+		$\tauH$   & $\in$   & $\widehat{\textrm{\textbf{Type}}}$     & annotated types\\
+		$\sigmaH$ & $\in$   & $\widehat{\textrm{\textbf{TyScheme}}}$ & annotated type schemes\\
+		$\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TyEnv}}}$    & annotated type enviroments\\
+	\end{tabular}
 \end{table}
 
 \begin{align*}
-\tauH   &::= \alpha ~|~ Int ~|~ Double ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
-\varphi &::= \tauH ~|~ \forall \alpha. \tauH_1\\
-\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
+	\tauH   &::= \alpha ~|~ Int ~|~ Double ~|~ Bool ~|~ \tauH_1 \rightarrow \tauH_2\\
+	\varphi &::= \tauH ~|~ \forall \alpha. \tauH_1\\
+	\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
 \end{align*}
 
 
@@ -90,7 +116,7 @@ $\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TyEnv}}}$    & annotated type en
 % If
 \trule
 	{\GCFA e_1 : Bool \\ \GCFA e_2 : \tauH \\ \GCFA e_3 : \tauH}
-	{\GCFA \ife{e_1}{e_2}{e_3} : \tauH}
+	{\GCFA \ite{e_1}{e_2}{e_3} : \tauH}
 	{cfa-if}
 
 % Case
@@ -103,13 +129,13 @@ $\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TyEnv}}}$    & annotated type en
 % Con
 \trule
 	{\GCFA e : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
-	{\GCFA \con{c}{e} : \tauH_2}
+	{\GCFA \con{C}{e} : \tauH_2}
 	{cfa-con}
 
 % Infix
 \trule
-	{\GCFA e_1 : \tauH_1 \\ \GCFA f : \tauH_1 \rightarrow \tauH_2 \\ \GCFA e_2 : \tauH_2}
-	{\GCFA \infix{e_1}{f}{e_2} : \tauH_2}
+	{\GCFA e_1 : \tauH_1 \\ \GCFA e_2 : \tauH_2}
+	{\GCFA \infix{e_1}{e_2} : \tauH_2}
 	{cfa-infix}
 
 \end{document}
