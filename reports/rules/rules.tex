@@ -106,49 +106,49 @@
 % Var
 \trule
 	{\GammaH (x) : \tauH}
-	{\GCFA x = v : \tauH}
+	{\GCFA x = t : \tauH}
 	{cfa-var}
 
 % Let
 \trule
-	{\GCFA e_1 : \tauH_1 \\ \GammaH[x \mapsto \tauH_1] \vdash e_2 : \tauH}
-	{\GCFA \letin{x = e_1}{e_2} : \tauH}
+	{\GCFA t_1 : \sigmaH_1 \\ \GammaH[x \mapsto \sigmaH_1] \vdash t_2 : \tauH}
+	{\GCFA \letin{x = t_1}{t_2} : \tauH}
 	{cfa-let}
 
 % Lam
 \trule
-	{\GCFA x : \tauH_1 \\ \GCFA e : \tauH_2}
-	{\GCFA \lam{x}{e} : \tauH_1 \xrightarrow{\{\pi\}} \tauH_2}
+	{\GCFA x : \tauH_1 \\ \GCFA t : \tauH_2}
+	{\GCFA \lam{x}{t} : \tauH_1 \xrightarrow{\{\pi\}} \tauH_2}
 	{cfa-lam}
 
 % App
 \trule
-	{\GCFA f : \tauH_1 \xrightarrow{\varphi} \tauH_2 \\ \GCFA e : \tauH_1}
-	{\GCFA \app{f}{e} : \tauH_2}
+	{\GCFA f : \tauH_1 \xrightarrow{\varphi} \tauH_2 \\ \GCFA t : \tauH_1}
+	{\GCFA \app{f}{t} : \tauH_2}
 	{cfa-app}
 
 % If
 \trule
-	{\GCFA e_1 : Bool \\ \GCFA e_2 : \tauH \\ \GCFA e_3 : \tauH}
-	{\GCFA \ite{e_1}{e_2}{e_3} : \tauH}
+	{\GCFA t_1 : Bool \\ \GCFA t_2 : \tauH \\ \GCFA t_3 : \tauH}
+	{\GCFA \ite{t_1}{t_2}{t_3} : \tauH}
 	{cfa-if}
 
 % Case
 \trule
-	{\GCFA e_1 : \tauH_1 \\ \GCFA e_2 : \tauH_1 \\ \GCFA e_3 : \tauH_2}
-	{\GCFA \case{e_1}{e_2}{e_3} : \tauH_2}
+	{\GCFA t_1 : \tauH_1 \\ \GCFA t_2 : \tauH_1 \\ \GCFA t_3 : \tauH_2}
+	{\GCFA \case{t_1}{t_2}{t_3} : \tauH_2}
 	{cfa-case}
 
 % Con
 \trule
-	{\GCFA e : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
-	{\GCFA \con{c}{e} : \tauH_2}
+	{\GCFA t : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
+	{\GCFA \con{c}{t} : \tauH_2}
 	{cfa-con}
 
 % Infix
 \trule
-	{\GCFA e_1 : \tauH_1 \\ \GCFA e_2 : \tauH_2}
-	{\GCFA \infix{e_1}{e_2} : \tauH_2}
+	{\GCFA t_1 : \tauH_1 \\ \GCFA t_2 : \tauH_2}
+	{\GCFA \infix{t_1}{t_2} : \tauH_2}
 	{cfa-op}
 
 \end{document}
