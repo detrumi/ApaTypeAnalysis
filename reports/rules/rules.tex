@@ -78,7 +78,7 @@ Below follows the annotated type system and its judgements.
 
 \begin{align*}
 	\varphi &::= \emptyset ~|~ \{\pi\} ~|~ \varphi_1 \cup \varphi_2 \\	
-	\tauH   &::= \alpha ~|~ Int ~|~ Float ~|~ Bool ~|~ \tauH_1 \xrightarrow{\varphi} \tauH_2\\
+	\tauH   &::= \alpha ~|~ Int ~|~ Bool ~|~ \tauH_1 \xrightarrow{\varphi} \tauH_2\\
 	\sigmaH &::= \tauH ~|~ \forall \alpha. \sigmaH_1\\
 	\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
 \end{align*}
