@@ -14,8 +14,10 @@ import System.Environment (getArgs)
 -- Function to create the CFG from the list of statements
 cfg :: [Statement] -> Gr String ()
 cfg _ = undefined where
-	nodeS :: Statement -> Node
-	nodeS = undefined
+	lnodeS :: Statement -> Int -> [LNode String]
+	lnodeS (SBind (Bind v e))   i = (i, show v) : lnodeE e i
+	lnodeS (SOperator xs)       i = undefined -- TODO
+	lnodeS (SData t vs ds)      i = undefined
 
 	lnodeE :: Expr -> Int -> [LNode String]
 	lnodeE (Const v)    i   = [(i, show v)]
