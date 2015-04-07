@@ -12,12 +12,12 @@ import System.Environment (getArgs)
 
 -- TODO: moet nog veel aan gebeuren, oa de i van de nodes
 -- Function to create the CFG from the list of statements
-cfg :: [Statement] -> Gr String ()
-cfg _ = undefined where
+--cfg :: [Statement] -> Gr String ()
+cfg ss = map (\t -> lnodeS t 0) ss where
 	lnodeS :: Statement -> Int -> [LNode String]
 	lnodeS (SBind (Bind v e))   i = (i, show v) : lnodeE e i
-	lnodeS (SOperator xs)       i = undefined -- TODO
-	lnodeS (SData t vs ds)      i = undefined
+	lnodeS (SOperator xs)       i = [(10, "")] -- TODO
+	lnodeS (SData t vs ds)      i = [(20, "")]
 
 	lnodeE :: Expr -> Int -> [LNode String]
 	lnodeE (Const v)    i   = [(i, show v)]
@@ -26,7 +26,7 @@ cfg _ = undefined where
 	lnodeE (Lam vs e)   i   = (i, concatMap show vs) : lnodeE e i
 	lnodeE (App e es)   i   = lnodeE e i ++ (concatMap (\t -> lnodeE t i) es)
 	lnodeE (If e1 e2 e3) i  = lnodeE e1 i ++ lnodeE e2 i ++ lnodeE e3 i
-	lnodeE (Case e es)  i   = undefined
+	lnodeE (Case e es)  i   = [(-10, "")] -- TODO
 	lnodeE (Con t es)   i   = (i, show t) : (concatMap (\t -> lnodeE t i) es)
 	lnodeE (Infix es ops) i = concatMap (\t -> lnodeE t i) es -- TODO: iets met de operators
 
@@ -37,7 +37,10 @@ main = do
 	run input
 	where
 		run :: String -> IO ()
-		run input = putStrLn $ show $ doParse input
-		
+		run input = putStrLn $ show $ cfg $ unright $ doParse input
+
+		unright (Right a) = a
+		unright (Left _)  = []
+
 		doParse :: String -> Either ParseError [Statement]
 		doParse s = runP pStatements () "Main" s
