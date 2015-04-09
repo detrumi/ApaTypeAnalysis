@@ -31,13 +31,10 @@ data Expr
 
 data Value
     = IntVal { fromIntVal :: Int }
-    | Unit
-    | List [Expr]
     deriving (Eq, Show)
 
 data Type
-    = TUnit
-    | TInt
+    = TInt
     | TVar Var
     | TCon TypeVar [Type]
     | Top

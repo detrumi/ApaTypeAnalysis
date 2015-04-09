@@ -45,8 +45,7 @@ pExprSimple = pLet
 
 pConst :: Parser Expr
 pConst = Const . IntVal <$> int
-     <|> Const Unit <$ pUnit
-     <|> Const . List <$> brackets (commaSep pExpr)
+--     <|> Const . List <$> brackets (commaSep pExpr)
 
 pVar :: Parser Expr
 pVar = Var <$> pLowerId
@@ -83,11 +82,8 @@ pDataConstr :: Parser DataCon
 pDataConstr = DataCon <$> pUpperId <*> many pType
 
 pType :: Parser Type
-pType = TUnit <$ pUnit
-    <|> TInt <$ identWith (== "Int") "Int"
+pType = TInt <$ identWith (== "Int") "Int"
     <|> TVar <$> pLowerId
     <|> TCon <$> pUpperId <*> many pType
     <|> parens pType
 
-pUnit :: Parser ()
-pUnit = try (const () <$> symbol "()")

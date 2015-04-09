@@ -39,7 +39,6 @@ ty stmts = undefined where
 
 	tyV :: Value -> MType
 	tyV (IntVal x)    = MInt
-	tyV (Unit)        = undefined -- TODO: wat is Unit?
 	tyV (List (e:_))  = tyE e -- Just return type of head
 
 
