@@ -37,6 +37,5 @@ data Type
     = TInt
     | TVar Var
     | TCon TypeVar [Type]
-    | Top
-    | TList Type
+    | TFunc Type Type
     deriving (Eq, Show)
