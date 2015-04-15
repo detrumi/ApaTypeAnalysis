@@ -9,6 +9,7 @@ import Typechecker
 import Text.Parsec.Prim (runP)
 import Text.Parsec.Error (ParseError)
 import System.Environment (getArgs)
+import Data.Either (rights)
 
 -- TODO: verplaatst ergens anders naar toe
 data Substitution = Type :=>: Type -- substitute the first with the second
@@ -29,10 +30,7 @@ main = do
 	run input
 	where
 		run :: String -> IO ()
-		run input = putStrLn $ show $ unright $ doParse input
-
-		unright (Right a) = a
-		unright (Left _)  = []
+		run input = putStrLn $ show $ typecheck $ either (error . show) id $ doParse input
 
 		doParse :: String -> Either ParseError [Statement]
 		doParse s = runP pStatements () "Main" s
