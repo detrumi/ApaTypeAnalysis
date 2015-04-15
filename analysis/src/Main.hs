@@ -18,9 +18,10 @@ unification TInt TInt = []
 unification (TFunc a b) (TFunc c d) = unification a c ++ unification b d
 
 solve :: [Constraint] -> [Substitution]
-solve cs = concatMap solve' cs where
-	solve' CEmpty       = []
-	solve' (c1 :=: c2)  = [] -- solve' s ++ s where s = unification c1 c2
+solve (CEmpty:cs)       = []
+solve ((c1 :=: c2):cs)  = [] -- solve (s:cs) ++ s where s = unification c1 c2
+--solve ((c1 :<: c2):cs)
+--solve ((c1 :-<: c2):cs)
 
 main :: IO ()
 main = do
