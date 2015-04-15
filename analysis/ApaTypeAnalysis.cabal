@@ -15,4 +15,4 @@ executable ApaTypeAnalysis
   main-is:             Main.hs
   -- other-modules:       
   hs-source-dirs:      src
-  build-depends:       base, parsec, fgl
+  build-depends:       base, parsec, fgl, mtl, containers

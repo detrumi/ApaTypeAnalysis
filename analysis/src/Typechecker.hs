@@ -10,6 +10,7 @@ import Control.Monad.Writer
 -- TODO: nog maar even kijken of we beide intance constraints nodig hebben
 -- deze zijn gelijk aan die in Generalizing HM
 data Constraint =
+	  CEmpty
 	| Type :=: Type
 	| Type :-<: Type    -- Explicit instance constraint
 	| Type :<: Type     -- Implicit instance constraint
