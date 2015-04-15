@@ -11,19 +11,19 @@ data Constraint
 	= Type :=: Type
 
 type Env = M.Map Var Type
-type CWriter = Writer [Constraint]
-type EnvState = StateT Env CWriter
 
-typecheck :: [Statement] -> CWriter [Type]
-typecheck ss = evalStateT (mapM typecheck1 ss) M.empty
+typecheck :: [Statement] -> [([Constraint], Type)]
+typecheck ss = undefined
 
-typecheck1 :: Statement -> EnvState Type
-typecheck1 (SBind (Bind v e)) = typecheck' e -- M.insert ...
-typecheck1 _ = undefined
+typecheck1 :: Env -> Statement -> ([Constraint], Type)
+typecheck1 m (SBind (Bind v e)) = undefined -- M.insert ...
+typecheck1 m _ = undefined
 
-typecheck' :: Expr -> EnvState Type
-typecheck' expr = case expr of
-	Const v -> return $ typecheckV v
+typecheck' :: Env -> Expr -> ([Constraint], Type)
+typecheck' m expr = case expr of
+	Const v -> ([], typecheckV v)
+	Var v -> undefined
 
 typecheckV :: Value -> Type
 typecheckV (IntVal i) = TInt
+
