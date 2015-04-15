@@ -21,8 +21,8 @@ data Expr
     = Const Value
     | Var Var
     | Let [Bind] Expr
-    | Lam [Var] Expr
-    | App Expr [Expr]
+    | Lam Var Expr
+    | App Expr Expr
     | If Expr Expr Expr
     | Case Expr [(Expr, Expr)]
     | Con TypeVar [Expr]

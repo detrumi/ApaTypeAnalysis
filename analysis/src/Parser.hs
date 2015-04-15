@@ -13,10 +13,10 @@ pStatements :: Parser [Statement]
 pStatements = sepEndBy1 (pOperatorDecl <|> pData <|> SBind <$> pDef) semi <* eof
 
 pDef :: Parser Bind
-pDef = foldArgs <$> (pLowerId <|> parens name) <*> many pLowerId <* reservedOp "=" <*> pExpr
+pDef = (\v as body -> Bind v (foldArgs as body)) <$> (pLowerId <|> parens name) <*> many pLowerId <* reservedOp "=" <*> pExpr
     where name = pLowerId <|> operator <|> parens name
-          foldArgs v [] body = Bind v body
-          foldArgs v args body = Bind v $ Lam args body
+          foldArgs [] body = body
+          foldArgs (a:as) body = Lam a (foldArgs as body)
 
 pData :: Parser Statement
 pData = SData <$ reserved "data" <*> pUpperId <*> many pLowerId
@@ -36,12 +36,15 @@ pExprSimple :: Parser Expr
 pExprSimple = pLet
     <|> pIf
     <|> pCase
-    <|> try (App <$> (parens pLambda <|> pVar) <*> some pExprSimple)
+    <|> try pApp
     <|> pLambda
     <|> try pConstr
     <|> pConst
     <|> pVar
     <|> parens pExpr
+
+pApp :: Parser Expr
+pApp = foldr (flip App) <$> (parens pLambda <|> pVar) <*> some pExprSimple
 
 pConst :: Parser Expr
 pConst = Const . IntVal <$> int
@@ -69,7 +72,9 @@ pCase = Case <$ reserved "case" <*> pExpr <* reserved "of" <*> braces (semiSep1 
     where alt = (,) <$> pExpr <* reservedOp "->" <*> pExpr
 
 pLambda :: Parser Expr
-pLambda = Lam <$ reservedOp "\\" <*> some pLowerId <* reservedOp "->" <*> pExpr
+pLambda = foldArgs <$ reservedOp "\\" <*> some pLowerId <* reservedOp "->" <*> pExpr
+    where foldArgs [] body = body
+          foldArgs (a:as) body = Lam a (foldArgs as body)
 
 pConstr :: Parser Expr
 pConstr = Con <$> pUpperId <*> many (pConst <|> pVar <|> pConstrSimple)
