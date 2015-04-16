@@ -14,13 +14,13 @@ import Data.Either (rights)
 -- TODO: verplaatst ergens anders naar toe
 data Substitution = NoSub | Var :=>: Type -- substitute the first with the second
 
-unification :: Type -> Type -> Substitution
-unification TInt TInt = NoSub
-unification (TFunc a b) (TFunc c d) = unification a c -- ++ unification b d
+unification :: Type -> Type -> [Substitution]
+unification TInt TInt = []
+unification (TFunc a b) (TFunc c d) = unification a c ++ unification b d -- ++ (TFunc a b :=: TFunc c d :=>: ... moet nog aangevuld worden met een fresh
 
 -- Apply substitution to constraints
-substitute :: Substitution -> [Constraint] -> [Constraint]
-substitute sub cs = map (f sub) cs where
+substitute :: [Substitution] -> [Constraint] -> [Constraint]
+substitute subs cs = concat [map (f x) cs | x <- subs] where
 	f (v :=>: t) (c :=: d) = repl v t c :=: repl v t d
 	f (v :=>: t) (c :-<: d) = repl v t c :-<: repl v t d
 	f (v :=>: t) (c :<: d) = repl v t c :<: repl v t d
@@ -34,9 +34,10 @@ substitute sub cs = map (f sub) cs where
 
 solve :: [Constraint] -> [Substitution]
 solve (CEmpty:cs)       = []
-solve ((c1 :=: c2):cs)  = solve (substitute s cs) ++ [s] where s = unification c1 c2
---solve ((c1 :<: c2):cs)
---solve ((c1 :-<: c2):cs)
+solve ((t1 :=: t2):cs)  = solve (substitute s cs) ++ s where s = unification t1 t2
+-- TODO: zijn deze nodig? TypeChecker maakt niet deze constraints
+--solve ((t1 :<: t2):cs)  = solve ((t1 :-<: 
+--solve ((t :-<: sig):cs) = solve ((t :=: sig):cs)
 
 main :: IO ()
 main = do
@@ -46,9 +47,6 @@ main = do
 	where
 		run :: String -> IO ()
 		run input = putStrLn $ show $ typecheck $ either (error . show) id $ doParse input
-
-		unright (Right a) = a
-		unright (Left _)  = []
 
 		doParse :: String -> Either ParseError [Statement]
 		doParse s = runP pStatements () "Main" s
