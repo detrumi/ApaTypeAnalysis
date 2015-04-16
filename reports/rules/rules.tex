@@ -10,6 +10,7 @@
 \newcommand{\keyw}[1]{\textrm{\textbf{#1}}}
 
 \newcommand{\GammaH}{\widehat{\Gamma}}
+\newcommand{\DeltaH}{\widehat{\Delta}}
 \newcommand{\tauH}{\widehat{\tau}}
 \newcommand{\sigmaH}{\widehat{\sigma}}
 
@@ -26,6 +27,7 @@
 
 % provides Gamma |- CFA
 \newcommand{\GCFA}{\GammaH \vdash_{CFA}}
+\newcommand{\DCFA}{\DeltaH \vdash_{CFA}}
 
 \newcommand{\letin}[2]{\keyw{let~} #1 \keyw{~in~} #2}
 \newcommand{\lam}[2]{\keyw{$\lambda_\pi$} #1 \rightarrow #2}
@@ -33,8 +35,6 @@
 \newcommand{\case}[3]{\keyw{case~} #1 \keyw{~of \{~} #2 \rightarrow #3 \keyw{~\}}}
 \newcommand{\app}[2]{#1 ~ #2}
 \newcommand{\con}[2]{#1 ~ #2}
-\newcommand{\infix}[2]{#1 \oplus #2}
-
 
 \begin{document}
 
@@ -47,7 +47,6 @@
 		$n$     & $\in$     & \textbf{Int} = $\mathbb{Z}$         & integers\\
 		$b$     & $\in$     & \textbf{Bool} = \{true, false\}   & booleans\\
 		$f,x$   & $\in$     & \textbf{Var}                      & variables\\
-		$\oplus$ & $\in$     & \textbf{Op}                       & binary operators\\
 		$\pi$   & $\in$     & \textbf{Pnt}                      & program points\\
 		$t$     & $\in$     & \textbf{Tm}                       & terms\\
 		$c$     & $\in$     & \textbf{Con}                   & data constructors\\
@@ -62,7 +61,6 @@
 		& ~|~ \ite{t_1}{t_2}{t_3}\\
 		& ~|~ \case{t_1}{t_2}{t_3}\\
 		& ~|~ \con{c}{t_1}\\
-		& ~|~ \infix{t_1}{t_2}\\
 \end{align*}
 
 
@@ -73,7 +71,8 @@
 		$\varphi$ & $\in$   & \textbf{Ann}                           & annotations\\
 		$\tauH$   & $\in$   & $\widehat{\textrm{\textbf{Type}}}$     & annotated types\\
 		$\sigmaH$ & $\in$   & $\widehat{\textrm{\textbf{TyScheme}}}$ & annotated type schemes\\
-		$\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TyEnv}}}$    & annotated type enviroments\\
+		$\GammaH$ & $\in$   & $\widehat{\textrm{\textbf{TyEnv}}}$    & annotated type environments\\
+		$\DeltaH$ & $\in$   & $\widehat{\textrm{\textbf{ConEnv}}}$   & annotated constructor environments
 	\end{tabular}
 \end{table}
 
@@ -82,6 +81,7 @@
 	\tauH   &::= \alpha ~|~ Int ~|~ Bool ~|~ \tauH_1 \xrightarrow{\varphi} \tauH_2\\
 	\sigmaH &::= \tauH ~|~ \forall \alpha. \sigmaH_1\\
 	\GammaH &::= [] ~|~ \GammaH_1[x \mapsto \sigmaH]\\
+	\DeltaH &::= [] ~|~ \DeltaH_1[C \mapsto (\tauH_1,...,\tauH_n) \rightarrow \tauH]\\
 \end{align*}
 
 
@@ -135,20 +135,20 @@
 
 % Case
 \trule
-	{\GCFA t_1 : \tauH_1 \\ \GCFA t_2 : \tauH_1 \\ \GCFA t_3 : \tauH_2}
-	{\GCFA \case{t_1}{t_2}{t_3} : \tauH_2}
+	{\DCFA arity(C) = n \\ \DeltaH(C) = (\tauH_1,...,\tauH_n) \rightarrow D \\ \GammaH[x_i \mapsto \tau_i | 1 \leq i \leq n] \vdash_{CFA} x_i : \tau_i \\ \GCFA t : \tauH}
+	{\GCFA \case{e}{C (x_1,...,x_n)}{t} : \tauH_2}
 	{cfa-case}
 
 % Con
 \trule
-	{\GCFA t : \tauH_1 \\ \GammaH [c \mapsto \tauH_2]}
-	{\GCFA \con{c}{t} : \tauH_2}
-	{cfa-con}
-
-% Infix
+	{\DCFA arity(C) = n \\ \GCFA e_i : \tauH_i\ (1 \leq i \leq n) \\ \GammaH [c \mapsto \tauH_2]}
+	{\GCFA c_\pi\ (e_1,...,e_n) : D^\pi}
+	{cfa-con}	
+	
+% Subtyping
 \trule
-	{\GCFA t_1 : \tauH_1 \\ \GCFA t_2 : \tauH_2}
-	{\GCFA \infix{t_1}{t_2} : \tauH_2}
-	{cfa-op}
+	{\GCFA e : \tauH\ \&\ \varphi \\ \widehat{\tau'} \leq \widehat{\tau'} \\ \varphi \subseteq \varphi'}
+	{\GCFA e : \widehat{\tau'}\ \&\ \varphi'}
+	{cfa-sub}
 
 \end{document}
