@@ -22,7 +22,7 @@ unification (TFunc a b) (TFunc c d) = unification a c ++ unification b d
 -- TODO: is nog niet echt een nette functie, werkt wel
 substitute :: Substitution -> [Constraint] -> [Constraint]
 substitute sub cs = map (f sub) cs where
-	f (v :=>: t) (TVar c :=: TVar d) = repl v t c :=: repl v t d
+	{-f (v :=>: t) (TVar c :=: TVar d) = repl v t c :=: repl v t d
 	f (v :=>: t) (TVar c :=: d)      = repl v t c :=: d
 	f (v :=>: t) (c      :=: TVar d) =          c :=: repl v t d
 	f _          (c      :=: d)      =          c :=: d
@@ -35,11 +35,18 @@ substitute sub cs = map (f sub) cs where
 	f (v :=>: t) (TVar c :<: TVar d) = repl v t c :<: repl v t d
 	f (v :=>: t) (TVar c :<: d)      = repl v t c :<: d
 	f (v :=>: t) (c      :<: TVar d) =          c :<: repl v t d
-	f _          (c      :<: d)      =          c :<: d
+	f _          (c      :<: d)      =          c :<: d-}
 
-	repl :: Var -> Type -> Var -> Type
-	repl v t x  | v == x    = t
-				| otherwise = TVar x -- Just create a new TVar, to replace the old one
+	f (v :=>: t) (c :=: d) = repl v t c :=: repl v t d
+	f (v :=>: t) (c :-<: d) = repl v t c :-<: repl v t d
+	f (v :=>: t) (c :<: d) = repl v t c :<: repl v t d
+
+	repl :: Var -> Type -> Type -> Type
+	repl v t (TVar x)   | v == x    = t
+						| otherwise = TVar x -- Just create a new TVar, to replace the old one
+	repl v t TInt   = TInt
+	repl v t (TCon tv ts) = TCon tv (map (repl v t) ts)
+	repl v t (TFunc f1 f2) = TFunc (repl v t f1) (repl v t f2)
 
 solve :: [Constraint] -> [Substitution]
 solve (CEmpty:cs)       = []
