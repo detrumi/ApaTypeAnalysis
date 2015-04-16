@@ -12,11 +12,11 @@ import System.Environment (getArgs)
 import Data.Either (rights)
 
 -- TODO: verplaatst ergens anders naar toe
-data Substitution = Var :=>: Type -- substitute the first with the second
+data Substitution = NoSub | Var :=>: Type -- substitute the first with the second
 
-unification :: Type -> Type -> [Substitution]
-unification TInt TInt = []
-unification (TFunc a b) (TFunc c d) = unification a c ++ unification b d
+unification :: Type -> Type -> Substitution
+unification TInt TInt = NoSub
+unification (TFunc a b) (TFunc c d) = unification a c -- ++ unification b d
 
 -- Apply substitution to constraints
 substitute :: Substitution -> [Constraint] -> [Constraint]
@@ -34,7 +34,7 @@ substitute sub cs = map (f sub) cs where
 
 solve :: [Constraint] -> [Substitution]
 solve (CEmpty:cs)       = []
-solve ((c1 :=: c2):cs)  = [] -- solve (substitute s cs) ++ s where s = unification c1 c2
+solve ((c1 :=: c2):cs)  = solve (substitute s cs) ++ [s] where s = unification c1 c2
 --solve ((c1 :<: c2):cs)
 --solve ((c1 :-<: c2):cs)
 
