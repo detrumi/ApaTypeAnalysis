@@ -11,7 +11,7 @@ import Text.Parsec.Error (ParseError)
 import System.Environment (getArgs)
 
 -- TODO: verplaatst ergens anders naar toe
-data Substitution = Type :=>: Type -- substitute the first with the second
+data Substitution = TypeVar :=>: Type -- substitute the first with the second
 
 unification :: Type -> Type -> [Substitution]
 unification TInt TInt = []
