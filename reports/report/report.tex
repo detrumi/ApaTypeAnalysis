@@ -21,12 +21,8 @@ The files \texttt{Lexer.hs} and \texttt{Parser.hs} implement a lexer/parser comb
 
 \texttt{Typechecker.hs} provides a type checker, that creates a list of constraints. These constraints can then be solved using the solver that can be found in \texttt{Main.hs}. \texttt{Main.hs} ties everything together and passes the contents of a file (given as a commandline argument) to the correct functions.
 
-
-\section{Type system}
-We do typechecking using Algorithm W, and use a two-stage approach where we first gather constraints and later on solve and apply them.
-
-\section{Constraint system}
-
+\section{Type and constraint systems}
+We do typechecking using Algorithm W, and use a two-stage approach where we first gather constraints and later on solve and apply them. This solving is done by our constraint solver. The rules the complete system can be found in \texttt{analysis/reports/rules.pdf}
 
 \section{Example}
 
