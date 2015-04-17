@@ -17,6 +17,7 @@ Project structure
 - reports: contains additional documentation:
   - plan: contains the original proposal of the analysis
   - rules: contains the type rules
+  - report: contains the final report
 
 Building/running
 ----------------
