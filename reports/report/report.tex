@@ -30,4 +30,19 @@ The files \texttt{Lexer.hs} and \texttt{Parser.hs} implement a lexer/parser comb
 
 \section{Example}
 
+
+\section{Features and limitations}
+Our lexer/parser combination supports:
+\begin{itemize}
+	\item A lambda-calculus based language
+	\item Let-bindings
+	\item Condional expression (if-then-else and case)
+	\item Function definition and application
+	\item Binary operators
+	\item Data constructors
+\end{itemize}
+The type checker supports all these language constructions, except for the data constructors and binary operators.
+
+Unfortunately however, the constraint solver does not work. This is due to an unfinished implementation of the unification algorithm, as we had troubles implementing this. The sourecode of ths function can be found in \texttt{Main.hs}, but is not used.
+
 \end{document}
