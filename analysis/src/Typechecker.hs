@@ -60,8 +60,14 @@ typecheck' m expr = case expr of
         (ct,tt) <- typecheck' m t
         (ce,te) <- typecheck' m e
         return (ci ++ ct ++ ce ++ [tt :=: te], tt)
-    Infix es ops -> undefined
-    Con v es -> error "con" -- TODO what to do here?
+    Infix [e1,e2] [op] -> do
+        (c1,t1) <- typecheck' m e1
+        (c2,t2) <- typecheck' m e2
+        return ([t1 :=: TInt, t2 :=: TInt] ++ c1 ++ c2, TInt)
+    Con v es -> do
+        es' <- mapM (typecheck' m) es
+        let t = fromMaybe (error $ "Unknown constructor: " ++ v) (M.lookup v m)
+        return (concatMap fst es', t)
 
 
 typecheckV :: Value -> Type
