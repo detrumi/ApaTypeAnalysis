@@ -3,10 +3,11 @@ module Expr where
 type Var = String
 type TypeVar = String
 
+-- Statements
 data Statement
-    = SBind Bind
-    | SOperator [(Operator, Precedence)]
-    | SData TypeVar [Var] [DataCon]
+    = SBind Bind                            -- Variable / function binding
+    | SOperator [(Operator, Precedence)]    -- Operator precedence
+    | SData TypeVar [Var] [DataCon]         -- Data constructors
     deriving (Eq, Show)
 
 type Operator = String
@@ -17,6 +18,7 @@ data Bind = Bind Var Expr
 data DataCon = DataCon TypeVar [Type]
     deriving (Eq, Show)
 
+-- Expressions
 data Expr
     = Const Value
     | Var Var

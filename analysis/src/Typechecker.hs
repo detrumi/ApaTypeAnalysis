@@ -8,8 +8,7 @@ import Data.Maybe (fromMaybe)
 import qualified Data.Map as M
 import Control.Monad.State
 
--- TODO: nog maar even kijken of we beide intance constraints nodig hebben
--- deze zijn gelijk aan die in Generalizing HM
+-- Data type to represent the constraints
 data Constraint =
 	  CEmpty
 	| Type :=: Type
@@ -20,7 +19,7 @@ data Constraint =
 type Env = M.Map Var Type
 type Counter = State String
 
-
+-- Perform a typecheck on the list of statements, and create a list of constraints
 typecheck :: [Statement] -> [([Constraint], Type)]
 typecheck ss = evalState (sequence (map (typecheck1 M.empty) ss)) "A"
 
@@ -34,8 +33,7 @@ typecheck' m expr = case expr of
     Var v -> do
         let t = fromMaybe (error $ "Unknown variable: " ++ v) (M.lookup v m)
         return ([], t)
-    Let bs e -> do
-        -- TODO what to do with bs here?
+    Let _ e -> do
         e' <- typecheck' m e
         return e'
     Lam x e -> do
@@ -68,7 +66,6 @@ typecheck' m expr = case expr of
         es' <- mapM (typecheck' m) es
         let t = fromMaybe (error $ "Unknown constructor: " ++ v) (M.lookup v m)
         return (concatMap fst es', t)
-
 
 typecheckV :: Value -> Type
 typecheckV (IntVal i) = TInt
