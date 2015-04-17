@@ -25,7 +25,9 @@ The files \texttt{Lexer.hs} and \texttt{Parser.hs} implement a lexer/parser comb
 We do typechecking using Algorithm W, and use a two-stage approach where we first gather constraints and later on solve and apply them. This solving is done by our constraint solver. The rules the complete system can be found in \texttt{analysis/reports/rules.pdf}
 
 \section{Example}
+We provided 3 simple examples. These can be found in the \texttt{analysis/examples} directory.
 
+Example number 1 shows a data constructor, a few function declarations and usage of the case statement. Example 2 shows a data constructor and a if-then-else conditional. Example 3 provides a simple showcase of the let binding and lambda expressions.
 
 \section{Features and limitations}
 Our lexer/parser combination supports:
