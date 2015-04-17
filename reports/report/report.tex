@@ -9,6 +9,17 @@
 \maketitle
 
 \section{Architecture}
+In the \texttt{analysis/src} directory we can find five files:
+\begin{itemize}
+	\item \texttt{Expr.hs}
+	\item \texttt{Lexer.hs}
+	\item \texttt{Main.hs}
+	\item \texttt{Parser.hs}
+	\item \texttt{Typechecker.hs}
+\end{itemize}
+The files \texttt{Lexer.hs} and \texttt{Parser.hs} implement a lexer/parser combination using the Parsec library. This parses a limited subset of the haskell syntax into a list of statements. These statements are defined in \texttt{Expr.hs}.
+
+\texttt{Typechecker.hs} provides a type checker, that creates a list of constraints. These constraints can then be solved using the solver that can be found in \texttt{Main.hs}. \texttt{Main.hs} ties everything together and passes the contents of a file (given as a commandline argument) to the correct functions.
 
 
 \section{Type system}
