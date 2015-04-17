@@ -30,3 +30,7 @@ Building/running
     $ cabal configure
     $ cabal build
     $ ./run examples/Example1.hs
+
+run is a symlink. If it does not work, you have to call:
+
+    $ dist/build/ApaTypeAnalysis/ApaTypeAnalysis examples/Example1.hs
