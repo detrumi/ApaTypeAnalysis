@@ -1,6 +1,10 @@
 ApaTypeAnalysis
 ===============
 
+Students:
+Frank Dedden (3705269)
+Wilco Kusee (3800296)
+
 Assignment for the master course `Automatic Program Analysis`.
 
 Project structure
